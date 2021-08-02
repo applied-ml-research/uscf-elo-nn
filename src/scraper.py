@@ -1,9 +1,16 @@
 import bs4
+import pickle
 import requests
+import sys
 
 URL = 'http://www.uschess.org/datapage/event-search.php?name=&state=ANY&city=&date_from=&date_to=&order=D&minsize=50&affil=&timectl=&rsys=ANY&mode=Find'
 
 def main():
+  if len(sys.argv) < 2:
+    print("No pickle dump file specified")
+    return
+  file_name = sys.argv[1]
+
   page = requests.get(URL)
   soup = bs4.BeautifulSoup(page.content, 'html.parser')
 
@@ -69,8 +76,8 @@ def main():
         rank += 1
     results.append(data)
 
-  print(results)
+  with open(file_name, 'wb') as handle:
+    pickle.dump(results, handle)
 
 if __name__ == '__main__':
   main()
-
